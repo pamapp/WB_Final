@@ -1,0 +1,207 @@
+openapi: 3.0.3
+info:
+  title: TheDogAPI
+  description: An API to retrieve data about different dog breeds.
+  version: 1.0.0
+servers:
+  - url: https://api.thedogapi.com/v1
+paths:
+  /breeds:
+    get:
+      summary: Retrieve a list of dog breeds
+      operationId: getBreeds
+      parameters:
+        - name: api_key
+          in: query
+          description: API key
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The number of breeds to return
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: page
+          in: query
+          description: The page number for pagination
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: A list of dog breeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Breed'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                
+  /favourites/{id}:
+    delete:
+      summary: Remove a favourite
+      operationId: removeFavourite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Favourite removed successfully
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          
+  /favourites:
+    post:
+      summary: Add a favourite
+      operationId: addFavourite
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_id:
+                  type: string
+                sub_id:
+                  type: string
+              required:
+                - image_id
+                - sub_id
+      responses:
+        '200':
+          description: Favourite added successfully
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+    get:
+      summary: Get likes
+      operationId: getLikes
+      parameters:
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: sub_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of likes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+
+components:
+  schemas:
+    Breed:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier for the breed
+        name:
+          type: string
+          description: The name of the breed
+        weight:
+          $ref: '#/components/schemas/Measure'
+        height:
+          $ref: '#/components/schemas/Measure'
+        bred_for:
+          type: string
+          description: The original purpose or function of the breed
+        breed_group:
+          type: string
+          description: The group the breed belongs to
+        life_span:
+          type: string
+          description: Average life span of the breed
+        temperament:
+          type: string
+          description: Typical temperament of the breed
+        origin:
+          type: string
+          description: Origin of the breed
+        reference_image_id:
+          type: string
+          description: ID of the reference image for the breed
+    Measure:
+      type: object
+      properties:
+        imperial:
+          type: string
+          description: The measurement in imperial units
+        metric:
+          type: string
+          description: The measurement in metric units
+    Like:
+      required:
+        - id
+        - image_id
+        - sub_id
+      type: object
+      properties:
+        id:
+          type: integer
+        image_id:
+          type: string
+        sub_id:
+          type: string
+    ErrorModel:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          maximum: 600
+          minimum: 100
+          type: integer
