@@ -8,24 +8,27 @@
 import SwiftUI
 import UISystem
 import ExyteChat
+import DogsAPI
 
 struct PersonalChatView: View {
     @EnvironmentObject var fetchedBreeds: FetchedBreeds
     @FocusState private var isInputFocused: Bool
-    @StateObject private var vm: ChatVM
+    @StateObject private var vm: ChatViewModel
     
-    init(vm: ChatVM = ChatVM()) {
+    @State private var selectedBreed: Breed? = nil
+
+    init(vm: ChatViewModel = ChatViewModel()) {
         _vm = StateObject(wrappedValue: vm)
     }
     
     var body: some View {
         VStack {
             NavigationBarView(
-                title: "Анастасия И.",
+                title: "Dogs",
                 leadingIcon: UI.Icons.back,
                 trailingIcon: UI.Icons.search,
                 additionalTrailingIcon: UI.Icons.lines,
-                leadingAction: { isInputFocused = false},
+                leadingAction: { isInputFocused = false },
                 trailingAction: {},
                 additionalTrailingAction: {}
             )
@@ -35,18 +38,26 @@ struct PersonalChatView: View {
                 chatType: .conversation,
                 didSendMessage: sendDraft,
                 messageBuilder: messageViewBuilder,
-                inputViewBuilder: inputViewBuilder,
-                messageMenuAction: messageMenuAction
+                inputViewBuilder: inputViewBuilder
             )
             .headerBuilder(chatHeaderView)
+            .showMessageMenuOnLongPress(false)
             .chatTheme(colors: ChatTheme.Colors(
-                mainBackground: Color.theme.offWhite
+                mainBackground: Color.theme.offWhite,
+                messageMenuBackground: Color.theme.active
             ))
             .task {
                 await loadData()
             }
         }
         .background(Color.theme.white)
+        .sheet(item: $selectedBreed) { breed in
+            BreedDetailView(breed: breed, tapLike: {
+                Task {
+                    await toggleLikeStatus(imageId: breed.referenceImageId ?? "")
+                }
+            })
+        }
     }
 }
 
@@ -60,10 +71,22 @@ extension PersonalChatView {
         messageActionClosure: @escaping (Message, DefaultMessageMenuAction) -> Void,
         showAttachmentClosure: @escaping (Attachment) -> Void
     ) -> some View {
-        ChatMessageView(message: message, positionInUserGroup: positionInGroup)
-            .onTapGesture {
-                isInputFocused = false
+        let breedMessage = fetchedBreeds.breedMessages.first(where: { $0.message.id == message.id })
+        let imageId = breedMessage?.breed.referenceImageId
+        
+        ChatMessageView(
+            message: message,
+            positionInUserGroup: positionInGroup,
+            tapLike: {
+                Task {
+                    await toggleLikeStatus(imageId: imageId ?? "")
+                }
             }
+        )
+        .onTapGesture {
+            isInputFocused = false
+            selectedBreed = breedMessage?.breed
+        }
     }
     
     @ViewBuilder
@@ -109,34 +132,40 @@ extension PersonalChatView {
             }
         }
     }
-
-    private func messageMenuAction(
-        action: DefaultMessageMenuAction,
-        defaultActionClosure: (Message, DefaultMessageMenuAction) -> Void,
-        message: Message
-    ) {
-        switch action {
-        case .reply:
-            defaultActionClosure(message, .reply)
-            isInputFocused = true
-        case .edit:
-            ()
-        }
-    }
     
     private func loadData() async {
-        fetchedBreeds.loadBreeds { data, error in
-            if let breeds = data {
-                let messages = breeds.map { $0.toMessage() }
-                vm.messages.append(contentsOf: messages)
+        fetchedBreeds.loadBreeds { breedMessages, error in
+            if let breedMessages = breedMessages {
+                vm.messages = breedMessages.map { $0.message }
             }
         }
         
         fetchedBreeds.loadFavorites { data, error in
+            fetchedBreeds.favoriteBreeds = data ?? []
         }
     }
 }
 
-#Preview {
-    PersonalChatView()
+// MARK: - Actions
+
+extension PersonalChatView {
+    private func toggleLikeStatus(imageId: String) async {
+        if fetchedBreeds.isBreedFavorited(imageId) {
+            _ = await removeFavorite(imageId)
+        } else {
+            _ = await addFavorite(imageId)
+        }
+    }
+    
+    private func addFavorite(_ imageId: String) async -> Bool {
+        await fetchedBreeds.addFavorite(imageId: imageId, subId: "user")
+    }
+
+    private func removeFavorite(_ imageId: String) async -> Bool {
+        guard let favorite = fetchedBreeds.favoriteBreeds.first(where: { $0.imageId == imageId }) else {
+            return false
+        }
+        
+        return await fetchedBreeds.removeFavorite(id: favorite.id)
+    }
 }

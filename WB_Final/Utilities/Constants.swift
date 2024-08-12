@@ -9,6 +9,21 @@ import SwiftUI
 
 enum UI {
     enum Strings {
+        static let dogBreeds: String = "Dog Breeds"
+        static let all: String = "All"
+        static let favorites: String = "Favorites"
+        static let sortBy: String = "Sort by"
+
+        static let breeds: String = "Breeds"
+        static let basicCharacteristics: String = "Basic Characteristics"
+        static let temperament: String = "Temperament"
+        static let weight: String = "Weight"
+        static let height: String = "Height"
+        static let lifeSpan: String = "Life span"
+        static let breedGroup: String = "Breed group"
+        static let bredFor: String = "Bred for"
+        static let awesome: String = "Awesome"
+
         static var send: String { localizedString(for: .send) }
         static var sending: String { localizedString(for: .sending) }
         static var read: String { localizedString(for: .read) }
@@ -28,5 +43,6 @@ enum UI {
         static let lines: String = "lines"
         static let pauseAudio: String = "pauseAudio"
         static let playAudio: String = "playAudio"
+        static let heart: String = "heart"
     }
 }

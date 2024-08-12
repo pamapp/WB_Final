@@ -14,11 +14,11 @@ let subId = "user"
 let user = User(id: "1", name: "Dogs", avatarURL: nil, isCurrentUser: false)
 
 class FetchedBreeds: ObservableObject {
-    @Published var breeds: [Breed] = [] { didSet { isLoading = false } }
+    @Published var breedMessages: [BreedMessage] = [] { didSet { isLoading = false } }
     @Published var favoriteBreeds: [Like] = []
     @Published var isLoading: Bool = true
 
-    func loadBreeds(completion: @escaping (_ data: [Breed]?, _ error: Error?) -> Void) {
+    func loadBreeds(completion: @escaping (_ data: [BreedMessage]?, _ error: Error?) -> Void) {
         isLoading = true
         DogsAPI.getBreeds { data, error in
             defer { self.isLoading = false }
@@ -26,8 +26,9 @@ class FetchedBreeds: ObservableObject {
                 print("Error fetching breeds: \(error)")
                 completion(nil, error)
             }
-            self.breeds = data ?? []
-            completion(data, nil)
+            let breedMessages = data?.map { BreedMessage(breed: $0) } ?? []
+            self.breedMessages = breedMessages
+            completion(breedMessages, nil)
         }
     }
     
@@ -73,8 +74,49 @@ class FetchedBreeds: ObservableObject {
     }
 }
 
-extension Breed: Identifiable { }
-extension Like: Identifiable { }
+extension FetchedBreeds {
+    func isBreedFavorite(_ message: Message) -> Bool {
+        let breedMessage = breedMessages.first(where: { $0.message.id == message.id })
+        let imageId = breedMessage?.breed.referenceImageId
+
+        return favoriteBreeds.contains { $0.imageId == imageId }
+    }
+    
+    func isBreedFavorited(_ imageId: String?) -> Bool {
+         favoriteBreeds.contains { $0.imageId == imageId }
+    }
+    
+    func maximumValue(for characteristic: Characteristics) -> Int {
+        switch characteristic {
+        case .weight: 
+            breedMessages.compactMap { $0.breed.weight?.metric?.criteriaToInt() }.max() ?? 0
+        case .height: 
+            breedMessages.compactMap { $0.breed.height?.metric?.criteriaToInt() }.max() ?? 0
+        case .lifeSpan: 
+            breedMessages.compactMap { $0.breed.lifeSpan?.criteriaToInt() }.max() ?? 0
+        default: 0
+        }
+    }
+}
+
+extension Breed {
+    func progress(for characteristic: Characteristics, maxValue: Int) -> Double {
+        let currentValue: Int
+        
+        switch characteristic {
+        case .weight:
+            currentValue = weight?.metric?.criteriaToInt() ?? 0
+        case .height:
+            currentValue = height?.metric?.criteriaToInt() ?? 0
+        case .lifeSpan:
+            currentValue = lifeSpan?.criteriaToInt() ?? 0
+        default:
+            currentValue = 0
+        }
+        
+        return maxValue > 0 ? Double(currentValue) / Double(maxValue) : 0
+    }
+}
 
 extension Breed {
     func toMessage() -> Message {
@@ -90,3 +132,18 @@ extension Breed {
         )
     }
 }
+
+struct BreedMessage: Identifiable {
+    let id: UUID
+    let message: Message
+    let breed: Breed
+    
+    init(breed: Breed) {
+        self.id = UUID()
+        self.breed = breed
+        self.message = breed.toMessage()
+    }
+}
+
+extension Breed: Identifiable { }
+extension Like: Identifiable { }

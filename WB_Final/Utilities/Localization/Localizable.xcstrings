@@ -14,6 +14,9 @@
     "Aa" : {
 
     },
+    "Add to favorites" : {
+
+    },
     "error" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -47,6 +50,9 @@
           }
         }
       }
+    },
+    "Remove from favorites" : {
+
     },
     "send" : {
       "extractionState" : "manual",

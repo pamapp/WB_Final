@@ -34,8 +34,12 @@ struct RecordWaveView: View {
             durationView
                 .padding(.horizontal, 4)
             
-            RecordWaveformPlaying(samples: recording.waveformSamples, progress: recordPlayer.progress, color: colorWaveform)
-                .padding(.leading, 10)
+            RecordWaveformPlaying(
+                samples: recording.waveformSamples,
+                progress: recordPlayer.progress,
+                color: colorWaveform
+            )
+            .padding(.leading, 10)
         }
     }
 }

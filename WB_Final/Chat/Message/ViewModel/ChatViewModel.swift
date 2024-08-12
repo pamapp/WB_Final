@@ -8,9 +8,9 @@
 import SwiftUI
 import ExyteChat
 
-final class ChatVM: ObservableObject {
+final class ChatViewModel: ObservableObject {
     @Published var messages: [Message] = []
-    
+
     func send(draft: DraftMessage) async {
         let newMessage = await Message.makeMessage(id: UUID().uuidString, user: User(id: "1", name: "Steve", avatarURL: nil, isCurrentUser: true), draft: draft)
         await MainActor.run {

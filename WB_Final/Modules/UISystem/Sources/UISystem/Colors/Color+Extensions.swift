@@ -22,10 +22,13 @@ public struct ColorTheme {
     public let white = Color("color_white")
     public let active = Color("color_active")
     public let disabled = Color("color_disabled")
+    public let weakColor = Color("color_weak")
     
     //Accent
     public let success = Color("color_success")
     public let danger = Color("color_danger")
+    public let warning = Color("color_warning")
+    public let safe = Color("color_safe")
     
     public init() {}
 }

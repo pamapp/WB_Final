@@ -20,15 +20,28 @@ extension ChatMessageView {
         static let spacing: CGFloat = 12
         static let padding: CGFloat = 10
         static let topCornerRadius: CGFloat = 16
+        
+        static let linkStrokeWidth: CGFloat = 1.6
+        static let linkHeight: CGFloat = 20
+        static let linkWidth: CGFloat = 40
+
+        static let linkImageSize: CGFloat = 10
     }
 }
 
 struct ChatMessageView: View {
+    @EnvironmentObject var fetchedBreeds: FetchedBreeds
+
     var message: Message
     var positionInUserGroup: PositionInUserGroup
-    
+    var tapLike: () -> ()
+
     private var isCurrentUser: Bool {
         message.user.isCurrentUser
+    }
+    
+    private var isBreedFavorite: Bool {
+        fetchedBreeds.isBreedFavorite(message)
     }
     
     private var topPadding: CGFloat {
@@ -106,11 +119,16 @@ struct ChatMessageView: View {
             
             textView
             
-            createdAtView
+            HStack {
+                createdAtView
+                Spacer()
+                like
+            }
         }
         .scaledToFit()
         .padding(Constants.padding)
         .background(backgroundColor)
+        .contextMenu { actionRow }
         .clipShape(
             .rect(
                 topLeadingRadius: Constants.topCornerRadius,
@@ -130,40 +148,52 @@ struct ChatMessageView: View {
 extension ChatMessageView {
     @ViewBuilder
     private var replyMessage: some View {
-        if let reply = message.replyMessage {
-            ReplyMessageView(reply: reply,
-                             lineLimit: Constants.replyLineLimit,
-                             isCurrentUser: isCurrentUser
+        switch message.replyMessage {
+        case .some(let reply):
+            ReplyMessageView(
+                reply: reply,
+                lineLimit: Constants.replyLineLimit,
+                isCurrentUser: isCurrentUser
             )
+        case .none:
+            EmptyView()
         }
     }
     
     @ViewBuilder
     private var textView: some View {
-        if !message.text.isEmpty {
+        switch message.text.isEmpty {
+        case false:
             Text(message.text)
                 .foregroundColor(textColor)
                 .font(.bodyText2(Constants.fontSize))
                 .multilineTextAlignment(.leading)
                 .fixedSize(horizontal: false, vertical: true)
+        case true:
+            EmptyView()
         }
     }
     
     @ViewBuilder
     private var imagesView: some View {
-        if !message.attachments.isEmpty {
+        switch message.attachments.isEmpty {
+        case false:
             ForEach(message.attachments, id: \.id) { attachment in
-                AttachmentImageView(attachment: attachment,
-                                    imageSize: (nil, height: Constants.imageHeight),
-                                    cornerRadius: Constants.imageCornerRadius
+                CachedAsyncImage(
+                    url: attachment.thumbnail,
+                    imageSize: (nil, height: Constants.imageHeight),
+                    cornerRadius: Constants.imageCornerRadius
                 )
             }
+        case true:
+            EmptyView()
         }
     }
     
     @ViewBuilder
     private var recordingView: some View {
-        if let recording = message.recording {
+        switch message.recording {
+        case .some(let recording):
             RecordWaveView(
                 recording: recording,
                 colorButton: message.user.isCurrentUser ? Color.white : Color.theme.active,
@@ -172,6 +202,29 @@ extension ChatMessageView {
             .padding(Constants.recordingPadding)
             .background(replyBackgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 4))
+        case .none:
+            EmptyView()
+        }
+    }
+    
+    @ViewBuilder
+    private var like: some View {
+        switch isCurrentUser {
+        case false:
+            if isBreedFavorite {
+                Circle()
+                    .fill(Color.theme.offWhite)
+                    .frame(width: 26, height: 26)
+                    .overlay(Image(UI.Icons.heart))
+            }
+        case true:
+            EmptyView()
+        }
+    }
+    
+    private var actionRow: some View {
+        Button(action: tapLike) {
+            Label(isBreedFavorite ? "Remove from favorites" : "Add to favorites", systemImage: isBreedFavorite ? "heart.fill" : "heart")
         }
     }
     

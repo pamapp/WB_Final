@@ -84,9 +84,10 @@ extension ReplyMessageView {
     private var userAttachments: some View {
         if !reply.attachments.isEmpty {
             ForEach(reply.attachments, id: \.id) { attachment in
-                AttachmentImageView(attachment: attachment,
-                                    imageSize: Constants.imageSize,
-                                    cornerRadius: Constants.imageCornerRadius
+                CachedAsyncImage(
+                    url: attachment.thumbnail,
+                    imageSize: Constants.imageSize,
+                    cornerRadius: Constants.imageCornerRadius
                 )
             }
         }
