@@ -44,7 +44,8 @@ struct PersonalChatView: View {
             .showMessageMenuOnLongPress(false)
             .chatTheme(colors: ChatTheme.Colors(
                 mainBackground: Color.theme.offWhite,
-                messageMenuBackground: Color.theme.active
+                messageMenuBackground: Color.theme.active,
+                friendMessage: Color.theme.white
             ))
             .task {
                 await loadData()

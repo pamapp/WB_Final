@@ -19,12 +19,16 @@ extension BreedDetailView {
 }
 
 struct BreedDetailView: View {
-    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var fetchedBreeds: FetchedBreeds
+    @Environment(\.dismiss) var dismiss
 
     var breed: Breed
     var tapLike: () -> ()
 
+    private var isLiked: Bool {
+        fetchedBreeds.isBreedFavorited(breed.referenceImageId)
+    }
+    
     var body: some View {
         ZStack {
             ScrollView {
@@ -33,9 +37,6 @@ struct BreedDetailView: View {
                 VStack(spacing: 0) {
                     breedInfoTitle
                         .padding(.bottom, 24)
-                    
-                    sectionTitle(UI.Strings.basicCharacteristics)
-                        .padding(.bottom, 8)
                     
                     basicCharacteristicsSection
                         .padding(.bottom, 24)
@@ -60,6 +61,7 @@ struct BreedDetailView: View {
             
             bottomBar
         }
+        .background(Color.theme.white)
         .ignoresSafeArea()
     }
 }
@@ -67,49 +69,6 @@ struct BreedDetailView: View {
 // MARK: - Subviews
 
 extension BreedDetailView {
-    private var bottomBar: some View {
-        VStack {
-            Spacer()
-            
-            HStack {
-                closeButton
-                
-                likeButton
-            }
-            .padding(.top, 16)
-            .padding(.bottom, 24)
-            .padding(.horizontal, 24)
-            .frame(maxWidth: .infinity, alignment: .center)
-            .background(Color.theme.white)
-            .tabBarShadow()
-        }
-    }
-    
-    private var closeButton: some View {
-        Button(action: { dismiss() }) {
-            Text(UI.Strings.awesome)
-                .font(.heading2())
-                .foregroundColor(Color.theme.white)
-                .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(AwesomeButtonStyle())
-    }
-    
-    private var likeButton: some View {
-        Button(action: tapLike) {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.theme.offWhite)
-                .frame(width: 64, height: 64)
-                .overlay(
-                    Circle()
-                        .fill(Color.theme.white)
-                        .frame(width: 36, height: 36)
-                        .overlay (
-                            heart
-                        )
-                )
-        }
-    }
     
     @ViewBuilder
     private var breedImageView: some View {
@@ -117,17 +76,6 @@ extension BreedDetailView {
             ParallaxHeader(coordinateSpace: Constants.scrollCoordinateSpace, defaultHeight: 270) {
                 CachedAsyncImage(url: url, imageSize: (width: nil, height: 300), cornerRadius: 0)
             }
-        }
-    }
-    
-    @ViewBuilder
-    private var heart: some View {
-        switch fetchedBreeds.isBreedFavorited(breed.referenceImageId) {
-        case true:
-            Image(UI.Icons.heart)
-        case false:
-            Image(systemName: "heart")
-                .foregroundColor(Color.theme.defaultColor)
         }
     }
 
@@ -150,14 +98,16 @@ extension BreedDetailView {
     }
     
     private var basicCharacteristicsSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 10) {
+            sectionTitle(UI.Strings.basicCharacteristics)
+            
             VStack(spacing: 16) {
                 if let weight = breed.weight?.metric {
-                    characteristicRow(characteristic: .weight, value: weight)
+                    characteristicRow(characteristic: .weight, value: weight + " kg")
                 }
                 
                 if let height = breed.height?.metric {
-                    characteristicRow(characteristic: .height, value: height)
+                    characteristicRow(characteristic: .height, value: height + " cm")
                 }
                 
                 if let lifeSpan = breed.lifeSpan {
@@ -181,7 +131,7 @@ extension BreedDetailView {
     @ViewBuilder
     private var temperamentSection: some View {
         if let temperament = breed.temperament {
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
                 sectionTitle(UI.Strings.temperament)
                 
                 ChipsView(values: temperament.components(separatedBy: ", "))
@@ -215,6 +165,47 @@ extension BreedDetailView {
                 
                 ProgressLineView(progress: progress, color: color)
             }
+        }
+    }
+    
+    private var closeButton: some View {
+        Button(action: { dismiss() }) {
+            Text(UI.Strings.awesome)
+                .font(.heading2())
+                .foregroundColor(Color.theme.white)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(AwesomeButtonStyle())
+    }
+    
+    @ViewBuilder
+    private var likeButton: some View {
+        Button(action: tapLike) {
+            if isLiked {
+                Image(UI.Icons.heart)
+            } else {
+                Image(systemName: UI.Icons.heart)
+                    .foregroundColor(Color.theme.defaultColor)
+            }
+        }
+        .buttonStyle(LikeButtonStyle())
+    }
+    
+    private var bottomBar: some View {
+        VStack {
+            Spacer()
+            
+            HStack {
+                closeButton
+                
+                likeButton
+            }
+            .padding(.top, 16)
+            .padding(.bottom, 24)
+            .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color.theme.white)
+            .tabBarShadow()
         }
     }
 }

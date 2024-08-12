@@ -1,12 +1,11 @@
 //
-//  Array+Extensions.swift
+//  String+Extensions.swift
 //  WB_Final
 //
 //  Created by Alina Potapova on 12.08.2024.
 //
 
 import Foundation
-import DogsAPI
 
 extension String {
     func criteriaToInt() -> Int {

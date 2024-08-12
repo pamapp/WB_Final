@@ -27,9 +27,8 @@
 		913466BB2C67F488005A8B04 /* generateDogsAPI.sh in Resources */ = {isa = PBXBuildFile; fileRef = 913466BA2C67F483005A8B04 /* generateDogsAPI.sh */; };
 		913466BE2C67F4F9005A8B04 /* DogsAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 913466BD2C67F4F9005A8B04 /* DogsAPI */; };
 		913466C12C67F5A5005A8B04 /* FetchedBreeds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913466C02C67F5A5005A8B04 /* FetchedBreeds.swift */; };
-		913466C32C67FBAC005A8B04 /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913466C22C67FBAC005A8B04 /* Image+Extensions.swift */; };
 		91798AA32C68E438005F4524 /* BreedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91798AA22C68E438005F4524 /* BreedDetailView.swift */; };
-		91798AA52C6A3714005F4524 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91798AA42C6A3714005F4524 /* Array+Extensions.swift */; };
+		91798AA52C6A3714005F4524 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91798AA42C6A3714005F4524 /* String+Extensions.swift */; };
 		91798AA72C6A476A005F4524 /* Characteristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91798AA62C6A476A005F4524 /* Characteristics.swift */; };
 		91798AA92C6A4E92005F4524 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91798AA82C6A4E92005F4524 /* View+Extensions.swift */; };
 /* End PBXBuildFile section */
@@ -55,9 +54,8 @@
 		913466BA2C67F483005A8B04 /* generateDogsAPI.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = generateDogsAPI.sh; sourceTree = "<group>"; };
 		913466BC2C67F4F1005A8B04 /* DogsAPI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DogsAPI; sourceTree = "<group>"; };
 		913466C02C67F5A5005A8B04 /* FetchedBreeds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedBreeds.swift; sourceTree = "<group>"; };
-		913466C22C67FBAC005A8B04 /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
 		91798AA22C68E438005F4524 /* BreedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedDetailView.swift; sourceTree = "<group>"; };
-		91798AA42C6A3714005F4524 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		91798AA42C6A3714005F4524 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		91798AA62C6A476A005F4524 /* Characteristics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Characteristics.swift; sourceTree = "<group>"; };
 		91798AA82C6A4E92005F4524 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,8 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				913466B42C67D7AD005A8B04 /* Date+Extensions.swift */,
-				913466C22C67FBAC005A8B04 /* Image+Extensions.swift */,
-				91798AA42C6A3714005F4524 /* Array+Extensions.swift */,
+				91798AA42C6A3714005F4524 /* String+Extensions.swift */,
 				91798AA82C6A4E92005F4524 /* View+Extensions.swift */,
 			);
 			path = Extensions;
@@ -314,13 +311,12 @@
 				913466C12C67F5A5005A8B04 /* FetchedBreeds.swift in Sources */,
 				913466822C67CBA8005A8B04 /* ContentView.swift in Sources */,
 				913466B52C67D7AD005A8B04 /* Date+Extensions.swift in Sources */,
-				913466C32C67FBAC005A8B04 /* Image+Extensions.swift in Sources */,
 				9134669D2C67D354005A8B04 /* PersonalChatView.swift in Sources */,
 				913466802C67CBA8005A8B04 /* WB_FinalApp.swift in Sources */,
 				913466B12C67D6FF005A8B04 /* LocalizationKeys.swift in Sources */,
 				91798AA92C6A4E92005F4524 /* View+Extensions.swift in Sources */,
 				913466A82C67D514005A8B04 /* RecordWaveView.swift in Sources */,
-				91798AA52C6A3714005F4524 /* Array+Extensions.swift in Sources */,
+				91798AA52C6A3714005F4524 /* String+Extensions.swift in Sources */,
 				913466932C67D1B0005A8B04 /* Constants.swift in Sources */,
 				91798AA72C6A476A005F4524 /* Characteristics.swift in Sources */,
 				913466A42C67D407005A8B04 /* ChatViewModel.swift in Sources */,

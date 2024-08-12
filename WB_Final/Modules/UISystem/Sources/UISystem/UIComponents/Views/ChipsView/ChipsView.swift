@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+extension ChipsView {
+    private enum Constants {
+        static let bottomPadding: CGFloat = 8
+        static let trailingPadding: CGFloat = 4
+        static let chipCornerRadius: CGFloat = 16
+        static let chipHeight: CGFloat = 44
+        static let chipPadding: CGFloat = 10
+
+    }
+}
+
 public struct ChipsView: View {
     @State private var totalHeight: CGFloat = CGFloat.zero
     private var values: [String]
@@ -24,19 +35,26 @@ public struct ChipsView: View {
                 ZStack(alignment: .topLeading) {
                     ForEach(Array(values.enumerated()), id: \.element) { index, word in
                         chipItem(value: word)
-                            .padding([.horizontal, .vertical], 4)
+                            .padding(.trailing, 8)
+                            .padding(.bottom, 4)
                             .alignmentGuide(.leading, computeValue: { d in
-                                if (abs(width - d.width) > geometry.size.width) {
+                                let isLastItem = index == values.count - 1
+                                let exceedsWidth = abs(width - d.width) > geometry.size.width
+                                
+                                switch (exceedsWidth, isLastItem) {
+                                case (true, _):
                                     width = 0
                                     height -= d.height
-                                }
-                                let result = width
-                                if index == values.count - 1 {
+                                    return 0
+                                case (false, true):
+                                    let result = width
                                     width = 0
-                                } else {
+                                    return result
+                                case (false, false):
+                                    let result = width
                                     width -= d.width
+                                    return result
                                 }
-                                return result
                             })
                             .alignmentGuide(.top, computeValue: { d in
                                 let result = height
@@ -50,7 +68,7 @@ public struct ChipsView: View {
                 .background(viewHeightReader($totalHeight))
             }
         }
-        .frame(height: totalHeight).padding(.trailing, 8)
+        .frame(height: totalHeight)
     }
 }
 
@@ -62,10 +80,10 @@ extension ChipsView {
                 .foregroundColor(Color.theme.active)
                 .lineLimit(1)
         }
-        .padding(10)
+        .padding(Constants.chipPadding)
         .background(Color.theme.offWhite)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .frame(height: 44)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.chipCornerRadius))
+        .frame(height: Constants.chipHeight)
     }
 }
 

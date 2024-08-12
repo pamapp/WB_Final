@@ -232,7 +232,7 @@ extension ChatMessageView {
     
     private var createdAtView: some View {
         Text("\(message.createdAt.dateToString("HH:mm")) · \(messageStatusText)")
-            .foregroundColor(timeColor)
             .font(.caption2)
+            .foregroundColor(timeColor)
     }
 }

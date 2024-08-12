@@ -94,7 +94,8 @@ extension FetchedBreeds {
             breedMessages.compactMap { $0.breed.height?.metric?.criteriaToInt() }.max() ?? 0
         case .lifeSpan: 
             breedMessages.compactMap { $0.breed.lifeSpan?.criteriaToInt() }.max() ?? 0
-        default: 0
+        default: 
+            0
         }
     }
 }

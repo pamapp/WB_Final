@@ -15,6 +15,9 @@ extension View {
 }
 
 extension View {
+    
+    // - MARK: Shadow Modifiers
+
     func tabBarShadow() -> some View {
         self.modifier(TabBarShadow())
     }
@@ -34,28 +37,5 @@ extension View {
     
     func characteristicTextStyle(color: Color) -> some View {
         self.modifier(CharacteristicText(color: color))
-    }
-}
-
-public struct TabBarShadow: ViewModifier {
-    public init() {}
-    
-    public func body(content: Content) -> some View {
-        content
-            .shadow(color: Color.black.opacity(0.04), radius: 20)
-    }
-}
-
-
-public struct AwesomeButtonStyle: ButtonStyle {
-    public init() {}
-    
-    public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(height: 64)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundColor(configuration.isPressed ? Color.theme.darkColor : Color.theme.defaultColor)
-            )
     }
 }
