@@ -121,7 +121,9 @@ struct ChatMessageView: View {
             
             HStack {
                 createdAtView
+                
                 Spacer()
+                
                 like
             }
         }

@@ -26,35 +26,40 @@ struct BreedDetailView: View {
     var tapLike: () -> ()
 
     var body: some View {
-        ScrollView {
-            breedImageView
-            
-            VStack(spacing: 0) {
-                breedInfoTitle
-                    .padding(.bottom, 24)
-            
-                sectionTitle(UI.Strings.basicCharacteristics)
-                    .padding(.bottom, 8)
+        ZStack {
+            ScrollView {
+                breedImageView
                 
-                basicCharacteristicsSection
-                    .padding(.bottom, 24)
-                
-                temperamentSection
-            }
-            .padding(.horizontal, Constants.spacing)
-            .padding(.top, Constants.spacing)
-            .background(Color.theme.white)
-            .clipShape(
-                .rect(
-                    topLeadingRadius: Constants.cornerRadius,
-                    bottomLeadingRadius: 0,
-                    bottomTrailingRadius: 0,
-                    topTrailingRadius: Constants.cornerRadius
+                VStack(spacing: 0) {
+                    breedInfoTitle
+                        .padding(.bottom, 24)
+                    
+                    sectionTitle(UI.Strings.basicCharacteristics)
+                        .padding(.bottom, 8)
+                    
+                    basicCharacteristicsSection
+                        .padding(.bottom, 24)
+                    
+                    temperamentSection
+                }
+                .padding(.horizontal, Constants.spacing)
+                .padding(.top, Constants.spacing)
+                .background(Color.theme.white)
+                .clipShape(
+                    .rect(
+                        topLeadingRadius: Constants.cornerRadius,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: Constants.cornerRadius
+                    )
                 )
-            )
-            .offset(y: -30)
+                .offset(y: -30)
+                .padding(.bottom, 96)
+            }
+            .coordinateSpace(name: Constants.scrollCoordinateSpace)
+            
+            bottomBar
         }
-        .coordinateSpace(name: Constants.scrollCoordinateSpace)
         .ignoresSafeArea()
     }
 }
@@ -62,6 +67,50 @@ struct BreedDetailView: View {
 // MARK: - Subviews
 
 extension BreedDetailView {
+    private var bottomBar: some View {
+        VStack {
+            Spacer()
+            
+            HStack {
+                closeButton
+                
+                likeButton
+            }
+            .padding(.top, 16)
+            .padding(.bottom, 24)
+            .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color.theme.white)
+            .tabBarShadow()
+        }
+    }
+    
+    private var closeButton: some View {
+        Button(action: { dismiss() }) {
+            Text(UI.Strings.awesome)
+                .font(.heading2())
+                .foregroundColor(Color.theme.white)
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(AwesomeButtonStyle())
+    }
+    
+    private var likeButton: some View {
+        Button(action: tapLike) {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.theme.offWhite)
+                .frame(width: 64, height: 64)
+                .overlay(
+                    Circle()
+                        .fill(Color.theme.white)
+                        .frame(width: 36, height: 36)
+                        .overlay (
+                            heart
+                        )
+                )
+        }
+    }
+    
     @ViewBuilder
     private var breedImageView: some View {
         if let image = breed.image, let url = URL(string: image) {
@@ -78,7 +127,7 @@ extension BreedDetailView {
             Image(UI.Icons.heart)
         case false:
             Image(systemName: "heart")
-                .foregroundColor(Color.theme.active)
+                .foregroundColor(Color.theme.defaultColor)
         }
     }
 
@@ -88,20 +137,6 @@ extension BreedDetailView {
                 .breedDetailTitle()
             
             Spacer()
-            
-            Button(action: tapLike) {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.theme.offWhite)
-                    .frame(width: 50, height: 50)
-                    .overlay(
-                        Circle()
-                            .fill(Color.theme.white)
-                            .frame(width: 36, height: 36)
-                            .overlay (
-                                heart
-                            )
-                    )
-            }
         }
     }
 
@@ -149,13 +184,7 @@ extension BreedDetailView {
             VStack(spacing: 8) {
                 sectionTitle(UI.Strings.temperament)
                 
-                VStack(spacing: 16) {
-                    Text(temperament)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                }
-                .characteristicSectionStyle()
+                ChipsView(values: temperament.components(separatedBy: ", "))
             }
         }
     }

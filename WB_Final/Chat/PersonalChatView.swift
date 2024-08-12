@@ -51,7 +51,7 @@ struct PersonalChatView: View {
             }
         }
         .background(Color.theme.white)
-        .sheet(item: $selectedBreed) { breed in
+        .fullScreenCover(item: $selectedBreed) { breed in
             BreedDetailView(breed: breed, tapLike: {
                 Task {
                     await toggleLikeStatus(imageId: breed.referenceImageId ?? "")
