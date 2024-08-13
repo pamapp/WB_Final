@@ -9,21 +9,26 @@ import SwiftUI
 
 enum UI {
     enum Strings {
-        static let dogBreeds: String = "Dog Breeds"
-        static let all: String = "All"
-        static let favorites: String = "Favorites"
-        static let sortBy: String = "Sort by"
+        static var dogBreeds: String { localizedString(for: .dogBreeds) }
+        static var all: String { localizedString(for: .all) }
+        static var favorites: String { localizedString(for: .favorites) }
+        static var sortBy: String { localizedString(for: .sortBy) }
+        static var command: String { localizedString(for: .command) }
 
-        static let breeds: String = "Breeds"
-        static let basicCharacteristics: String = "Basic Characteristics"
-        static let temperament: String = "Temperament"
-        static let weight: String = "Weight"
-        static let height: String = "Height"
-        static let lifeSpan: String = "Life span"
-        static let breedGroup: String = "Breed group"
-        static let bredFor: String = "Bred for"
-        static let awesome: String = "Awesome"
-
+        static var basicInfo: String { localizedString(for: .basicInfo) }
+        static var temperament: String { localizedString(for: .temperament) }
+        static var weight: String { localizedString(for: .weight) }
+        static var height: String { localizedString(for: .height) }
+        static var lifeSpan: String { localizedString(for: .lifeSpan) }
+        static var breedGroup: String { localizedString(for: .breedGroup) }
+        static var bredFor: String { localizedString(for: .bredFor) }
+        static var awesome: String { localizedString(for: .awesome) }
+        static var kg: String { localizedString(for: .kg) }
+        static var cm: String { localizedString(for: .cm) }
+ 
+        static var addFav: String { localizedString(for: .addFav) }
+        static var removeFav: String { localizedString(for: .removeFav) }
+        
         static var send: String { localizedString(for: .send) }
         static var sending: String { localizedString(for: .sending) }
         static var read: String { localizedString(for: .read) }
@@ -44,5 +49,6 @@ enum UI {
         static let pauseAudio: String = "pauseAudio"
         static let playAudio: String = "playAudio"
         static let heart: String = "heart"
+        static let heartFill: String = "heart.fill"
     }
 }

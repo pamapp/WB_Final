@@ -12,15 +12,24 @@ import UISystem
 extension BreedDetailView {
     enum Constants {
         static let spacing: CGFloat = 24
-        static let navigationSpacing: CGFloat = 3
+        static let bottomPadding: CGFloat = 100
+        static let offset: CGFloat = -30
+        
+        static let headerHeight: CGFloat = 270
+        static let imageHeight: CGFloat = 300
+
         static let cornerRadius: CGFloat = 30
+        
+        static let barMainPadding: CGFloat = 24
+        static let barTopPadding: CGFloat = 16
+        
         static let scrollCoordinateSpace = "detailScroll"
     }
 }
 
 struct BreedDetailView: View {
     @EnvironmentObject var fetchedBreeds: FetchedBreeds
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
 
     var breed: Breed
     var tapLike: () -> ()
@@ -36,15 +45,14 @@ struct BreedDetailView: View {
                 
                 VStack(spacing: 0) {
                     breedInfoTitle
-                        .padding(.bottom, 24)
+                        .padding(.bottom, Constants.spacing)
                     
                     basicCharacteristicsSection
-                        .padding(.bottom, 24)
+                        .padding(.bottom, Constants.spacing)
                     
                     temperamentSection
                 }
-                .padding(.horizontal, Constants.spacing)
-                .padding(.top, Constants.spacing)
+                .padding([.horizontal, .top], Constants.spacing)
                 .background(Color.theme.white)
                 .clipShape(
                     .rect(
@@ -54,8 +62,8 @@ struct BreedDetailView: View {
                         topTrailingRadius: Constants.cornerRadius
                     )
                 )
-                .offset(y: -30)
-                .padding(.bottom, 96)
+                .offset(y: Constants.offset)
+                .padding(.bottom, Constants.bottomPadding)
             }
             .coordinateSpace(name: Constants.scrollCoordinateSpace)
             
@@ -73,8 +81,8 @@ extension BreedDetailView {
     @ViewBuilder
     private var breedImageView: some View {
         if let image = breed.image, let url = URL(string: image) {
-            ParallaxHeader(coordinateSpace: Constants.scrollCoordinateSpace, defaultHeight: 270) {
-                CachedAsyncImage(url: url, imageSize: (width: nil, height: 300), cornerRadius: 0)
+            ParallaxHeader(coordinateSpace: Constants.scrollCoordinateSpace, defaultHeight: Constants.headerHeight) {
+                CachedAsyncImage(url: url, imageSize: (width: nil, height: Constants.imageHeight))
             }
         }
     }
@@ -99,15 +107,15 @@ extension BreedDetailView {
     
     private var basicCharacteristicsSection: some View {
         VStack(spacing: 10) {
-            sectionTitle(UI.Strings.basicCharacteristics)
+            sectionTitle(UI.Strings.basicInfo)
             
             VStack(spacing: 16) {
                 if let weight = breed.weight?.metric {
-                    characteristicRow(characteristic: .weight, value: weight + " kg")
+                    characteristicRow(characteristic: .weight, value: weight + UI.Strings.kg)
                 }
                 
                 if let height = breed.height?.metric {
-                    characteristicRow(characteristic: .height, value: height + " cm")
+                    characteristicRow(characteristic: .height, value: height + UI.Strings.cm)
                 }
                 
                 if let lifeSpan = breed.lifeSpan {
@@ -138,17 +146,22 @@ extension BreedDetailView {
             }
         }
     }
+    
+    private func characteristicIcon(for emoji: String) -> some View {
+        Circle()
+            .fill(Color.theme.white)
+            .frame(width: 36, height: 36)
+            .overlay(
+                Text(emoji)
+                    .font(.metadata1())
+            )
+    }
+
 
     private func characteristicRow(characteristic: Characteristics, value: String) -> some View {
         VStack {
             HStack {
-                Circle()
-                    .fill(Color.theme.white)
-                    .frame(width: 36, height: 36)
-                    .overlay(
-                        Text(characteristic.emoji)
-                            .font(.metadata1())
-                    )
+                characteristicIcon(for: characteristic.emoji)
                 
                 Text(characteristic.title + ":")
                     .characteristicTextStyle(color: Color.theme.active)
@@ -172,7 +185,7 @@ extension BreedDetailView {
         Button(action: { dismiss() }) {
             Text(UI.Strings.awesome)
                 .font(.heading2())
-                .foregroundColor(Color.theme.white)
+                .foregroundColor(Color.white)
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(AwesomeButtonStyle())
@@ -181,9 +194,10 @@ extension BreedDetailView {
     @ViewBuilder
     private var likeButton: some View {
         Button(action: tapLike) {
-            if isLiked {
+            switch isLiked {
+            case true:
                 Image(UI.Icons.heart)
-            } else {
+            case false:
                 Image(systemName: UI.Icons.heart)
                     .foregroundColor(Color.theme.defaultColor)
             }
@@ -200,9 +214,8 @@ extension BreedDetailView {
                 
                 likeButton
             }
-            .padding(.top, 16)
-            .padding(.bottom, 24)
-            .padding(.horizontal, 24)
+            .padding(.top, Constants.barTopPadding)
+            .padding([.bottom, .horizontal], Constants.barMainPadding)
             .frame(maxWidth: .infinity, alignment: .center)
             .background(Color.theme.white)
             .tabBarShadow()

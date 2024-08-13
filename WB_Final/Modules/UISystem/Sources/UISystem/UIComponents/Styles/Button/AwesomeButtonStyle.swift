@@ -17,5 +17,7 @@ public struct AwesomeButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 16)
                     .foregroundColor(configuration.isPressed ? Color.theme.darkColor : Color.theme.defaultColor)
             )
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.bouncy(duration: 0.1), value: configuration.isPressed)
     }
 }

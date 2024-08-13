@@ -14,8 +14,6 @@ extension ChatInputView {
         static let replyLineLimit: Int = 1
 
         static let spacing: CGFloat = 12
-        static let textFieldCornerRadius: CGFloat = 8
-        static let textFieldPadding: CGFloat = 8
         static let buttonVerticalPadding: CGFloat = 6
         static let replyPadding: CGFloat = 16
         static let mainVerticalPadding: CGFloat = 10
@@ -32,24 +30,6 @@ struct ChatInputView: View {
    
     private var textFieldAxis: Axis {
         inputViewStyle == .message ? .vertical : .horizontal
-    }
-    
-    private var buttonAction: Void {
-        switch inputViewState {
-        case .empty:
-            inputViewActionClosure(.recordAudioTap)
-        default:
-            inputViewActionClosure(.send)
-        }
-    }
-    
-    private var buttonIcon: String {
-        switch inputViewState {
-        case .empty, .isRecordingTap:
-            UI.Icons.mic
-        default:
-            UI.Icons.paperplane
-        }
     }
     
     var body: some View {
@@ -75,8 +55,7 @@ extension ChatInputView {
     private var replyContent: some View {
         if let reply = attachments.replyMessage {
             ReplyMessageView(reply: reply, lineLimit: Constants.replyLineLimit, isCurrentUser: false)
-                .padding(.horizontal, Constants.replyPadding)
-                .padding(.top, Constants.replyPadding)
+                .padding([.top, .horizontal], Constants.replyPadding)
         }
     }
     
@@ -84,9 +63,7 @@ extension ChatInputView {
     private var mediaButton: some View {
         switch inputViewStyle {
         case .message:
-            Button(action: {
-                inputViewActionClosure(.photo)
-            }) {
+            Button(action: { inputViewActionClosure(.photo) }) {
                 Image(UI.Icons.plus)
                     .foregroundColor(Color.theme.disabled)
             }
@@ -97,31 +74,16 @@ extension ChatInputView {
     }
     
     private var textField: some View {
-        TextField("Aa", text: $text, axis: textFieldAxis)
-            .font(.bodyText1())
-            .foregroundColor(Color.theme.active)
-            .padding(.horizontal, Constants.textFieldPadding)
-            .padding(.vertical, Constants.textFieldPadding)
-            .background(Color.theme.offWhite)
-            .clipShape(RoundedRectangle(cornerRadius: Constants.textFieldCornerRadius))
-
+        TextField(UI.Strings.command, text: $text, axis: textFieldAxis)
+            .textFieldStyle(CommandFieldStyle())
     }
     
     private var actionButton: some View {
-        Button(action: { buttonAction }) {
-            Image(buttonIcon)
-                .foregroundColor(Color.theme.disabled)
-                .background(
-                    Circle()
-                        .fill(inputViewState == .isRecordingTap ? Color.theme.defaultColor : Color.clear)
-                        .scaleEffect(inputViewState == .isRecordingTap ? 1.5 : 1)
-                        .animation(
-                            inputViewState == .isRecordingTap ?
-                            Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true) :
-                                    .default,
-                            value: inputViewState
-                        )
-                )
+        Button(action: { inputViewActionClosure(.send) }) {
+            Image(UI.Icons.paperplane)
+                .foregroundColor(inputViewState == .empty ? Color.theme.disabled : Color.theme.defaultColor)
+                .scaleEffect(inputViewState == .empty ? 0.9 : 1.0)
+                .animation(.easeInOut(duration: 0.2), value: inputViewState)
         }
         .padding(.vertical, Constants.buttonVerticalPadding)
     }

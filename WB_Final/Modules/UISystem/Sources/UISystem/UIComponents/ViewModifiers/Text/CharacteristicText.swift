@@ -18,5 +18,6 @@ public struct CharacteristicText: ViewModifier {
         content
             .font(.subheading2())
             .foregroundColor(color)
+            .multilineTextAlignment(.trailing)
     }
 }

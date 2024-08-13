@@ -5,7 +5,10 @@
 //  Created by Андрей on 11.08.2024.
 //
 
+import Foundation
 import SwiftUI
+import Combine
+import os.log
 
 class ImageCache {
     static let shared = ImageCache()
@@ -16,6 +19,9 @@ class ImageCache {
     private let maxCacheSize: Int = 50 * 1024 * 1024
     private let maxImageCount: Int = 100
     private let lock = NSLock()
+    private let logger = Logger(subsystem: "com.pamapp.WB-Final.imagecache", category: "ImageCache")
+    
+    private init() {}
     
     func image(for url: URL) -> UIImage? {
         lock.lock()
@@ -37,6 +43,7 @@ class ImageCache {
         cache[url] = CachedImage(image: image, size: imageSize)
         totalSize += imageSize
         order.append(url)
+        
     }
     
     private func removeOldestImage() {
@@ -44,6 +51,9 @@ class ImageCache {
         if let cachedImage = cache.removeValue(forKey: oldestURL) {
             totalSize -= cachedImage.size
             order.removeFirst()
+            
+            logger.info("Removed oldest image from cache for URL: \(oldestURL.absoluteString). Freed \(cachedImage.size) bytes. Total cache size: \(self.totalSize) bytes.")
+            
         }
     }
     

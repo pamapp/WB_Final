@@ -2,25 +2,22 @@
 //  CachedAsyncImage.swift
 //  WB_Final
 //
-//  Created by Alina Potapova on 10.08.2024.
+//  Created by Андрей & Alina Potapova on 10.08.2024.
 //
 
 import SwiftUI
+import ExyteChat
+import os.log
 
 public struct CachedAsyncImage: View {
     var url: URL
     var imageSize: (width: CGFloat?, height: CGFloat?)
     var cornerRadius: CGFloat?
     
-    @State private var loadState: ImageLoadState = .idle
+    @StateObject private var imageLoadStatePublisher = ImageLoadStatePublisher()
     @State private var task: Task<Void, Never>? = nil
     
-    enum ImageLoadState {
-        case idle
-        case loading
-        case loaded(UIImage)
-        case failed
-    }
+    private let logger = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "com.pamapp.WB-Final.attachment", category: "ImageLoading")
     
     public init(url: URL, imageSize: (width: CGFloat?, height: CGFloat?), cornerRadius: CGFloat? = nil) {
         self.url = url
@@ -30,7 +27,7 @@ public struct CachedAsyncImage: View {
     
     public var body: some View {
         Group {
-            switch loadState {
+            switch imageLoadStatePublisher.loadState {
             case .loading:
                 HStack {
                     ProgressView()
@@ -60,10 +57,10 @@ public struct CachedAsyncImage: View {
     }
     
     func loadImage() {
-        loadState = .loading
+        imageLoadStatePublisher.loadState = .loading
         
         if let cachedImage = ImageCache.shared.image(for: url) {
-            self.loadState = .loaded(cachedImage)
+            imageLoadStatePublisher.loadState = .loaded(cachedImage)
             return
         }
         
@@ -74,18 +71,26 @@ public struct CachedAsyncImage: View {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 guard let image = UIImage(data: data) else {
                     DispatchQueue.main.async {
-                        self.loadState = .failed
+                        os_log("Failed to decode image data from URL: %{public}@", log: logger, type: .error, url.absoluteString)
+                        imageLoadStatePublisher.loadState = .failed(.invalidData)
                     }
                     return
                 }
                 
                 ImageCache.shared.setImage(image, for: url)
+                
                 DispatchQueue.main.async {
-                    self.loadState = .loaded(image)
+                    imageLoadStatePublisher.loadState = .loaded(image)
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.loadState = .failed
+                    if let urlError = error as? URLError {
+//                        os_log("Network error occurred: %{public}@", log: logger, type: .error, urlError.localizedDescription)
+                        imageLoadStatePublisher.loadState = .failed(.networkError(urlError))
+                    } else {
+                        os_log("Unknown error occurred: %{public}@", log: logger, type: .error, error.localizedDescription)
+                        imageLoadStatePublisher.loadState = .failed(.unknownError)
+                    }
                 }
             }
         }

@@ -14,7 +14,6 @@ extension ChipsView {
         static let chipCornerRadius: CGFloat = 16
         static let chipHeight: CGFloat = 44
         static let chipPadding: CGFloat = 10
-
     }
 }
 
@@ -38,23 +37,17 @@ public struct ChipsView: View {
                             .padding(.trailing, 8)
                             .padding(.bottom, 4)
                             .alignmentGuide(.leading, computeValue: { d in
-                                let isLastItem = index == values.count - 1
-                                let exceedsWidth = abs(width - d.width) > geometry.size.width
-                                
-                                switch (exceedsWidth, isLastItem) {
-                                case (true, _):
+                                if (abs(width - d.width) > geometry.size.width) {
                                     width = 0
                                     height -= d.height
-                                    return 0
-                                case (false, true):
-                                    let result = width
-                                    width = 0
-                                    return result
-                                case (false, false):
-                                    let result = width
-                                    width -= d.width
-                                    return result
                                 }
+                                let result = width
+                                if index == values.count - 1 {
+                                    width = 0
+                                } else {
+                                    width -= d.width
+                                }
+                                return result
                             })
                             .alignmentGuide(.top, computeValue: { d in
                                 let result = height

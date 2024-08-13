@@ -8,6 +8,8 @@
 import SwiftUI
 
 public struct ProgressLineView: View {
+    @State private var animatedProgress: CGFloat = 0
+
     var progress: CGFloat
     var color: Color
     
@@ -25,11 +27,16 @@ public struct ProgressLineView: View {
                     .foregroundColor(.gray)
                 
                 Rectangle()
-                    .frame(width: geometry.size.width * progress, height: geometry.size.height)
+                    .frame(width: geometry.size.width * animatedProgress, height: geometry.size.height)
                     .foregroundColor(color)
                     .cornerRadius(45.0)
             }
             .cornerRadius(45.0)
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 0.8)) {
+                animatedProgress = progress
+            }
         }
     }
 }

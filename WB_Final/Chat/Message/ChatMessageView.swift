@@ -15,8 +15,7 @@ extension ChatMessageView {
         static let fontSize: CGFloat = 14
         static let imageHeight: CGFloat = 150
         static let imageCornerRadius: CGFloat = 4
-        static let recordingPadding: CGFloat = 16
-        static let recordingCornerRadius: CGFloat = 16
+        
         static let spacing: CGFloat = 12
         static let padding: CGFloat = 10
         static let topCornerRadius: CGFloat = 16
@@ -52,6 +51,14 @@ struct ChatMessageView: View {
         positionInUserGroup == .single || positionInUserGroup == .last ? 12 : 6
     }
     
+    private var leadingPadding: CGFloat {
+        isCurrentUser ? 77 : 16
+    }
+    
+    private var trailingPadding: CGFloat {
+        isCurrentUser ? 16 : 77
+    }
+    
     private var messageAlignment: Alignment {
         isCurrentUser ? .trailing : .leading
     }
@@ -62,14 +69,6 @@ struct ChatMessageView: View {
     
     private var textAlignment: TextAlignment {
         isCurrentUser ? .trailing : .leading
-    }
-    
-    private var leadingPadding: CGFloat {
-        isCurrentUser ? 77 : 16
-    }
-    
-    private var trailingPadding: CGFloat {
-        isCurrentUser ? 16 : 77
     }
     
     private var leadingCornerRadius: CGFloat {
@@ -114,8 +113,6 @@ struct ChatMessageView: View {
             replyMessage
             
             imagesView
-            
-            recordingView
             
             textView
             
@@ -193,23 +190,6 @@ extension ChatMessageView {
     }
     
     @ViewBuilder
-    private var recordingView: some View {
-        switch message.recording {
-        case .some(let recording):
-            RecordWaveView(
-                recording: recording,
-                colorButton: message.user.isCurrentUser ? Color.white : Color.theme.active,
-                colorWaveform: message.user.isCurrentUser ? Color.white : Color.theme.active
-            )
-            .padding(Constants.recordingPadding)
-            .background(replyBackgroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: 4))
-        case .none:
-            EmptyView()
-        }
-    }
-    
-    @ViewBuilder
     private var like: some View {
         switch isCurrentUser {
         case false:
@@ -226,7 +206,10 @@ extension ChatMessageView {
     
     private var actionRow: some View {
         Button(action: tapLike) {
-            Label(isBreedFavorite ? "Remove from favorites" : "Add to favorites", systemImage: isBreedFavorite ? "heart.fill" : "heart")
+            Label(
+                isBreedFavorite ? UI.Strings.removeFav :  UI.Strings.addFav,
+                systemImage: isBreedFavorite ? UI.Icons.heartFill : UI.Icons.heart
+            )
         }
     }
     

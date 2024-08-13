@@ -12,4 +12,26 @@ enum LocalizationKeys: String {
     case sending
     case read
     case error
+    
+    case addFav
+    case removeFav
+    
+    case dogBreeds
+    case all
+    case favorites
+    case sortBy
+    case command
+    
+    case basicInfo
+    case temperament
+    case weight
+    case height
+    case lifeSpan
+    case breedGroup
+    case bredFor
+    case awesome
+    
+    case kg
+    case cm
 }
+

@@ -75,6 +75,11 @@ class FetchedBreeds: ObservableObject {
 }
 
 extension FetchedBreeds {
+    func getFavoriteBreedMessages() -> [BreedMessage] {
+        let favoriteImageIds = favoriteBreeds.map { $0.imageId }
+        return breedMessages.filter { favoriteImageIds.contains($0.breed.referenceImageId ?? "") }
+    }
+    
     func isBreedFavorite(_ message: Message) -> Bool {
         let breedMessage = breedMessages.first(where: { $0.message.id == message.id })
         let imageId = breedMessage?.breed.referenceImageId
@@ -131,18 +136,6 @@ extension Breed {
                                type: .image)
                 ]
         )
-    }
-}
-
-struct BreedMessage: Identifiable {
-    let id: UUID
-    let message: Message
-    let breed: Breed
-    
-    init(breed: Breed) {
-        self.id = UUID()
-        self.breed = breed
-        self.message = breed.toMessage()
     }
 }
 
