@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var fetchedBreeds: FetchedBreeds = .init()
+    @StateObject private var fetchedBreeds: DogBreedService = .init()
+    @StateObject private var breedMessageManager: BreedMessageManager = .init()
 
     var body: some View {
-        PersonalChatView()
-            .environmentObject(fetchedBreeds)
+        PersonalChatScreen()
+            .environmentObject(fetchedBreeds)            
+            .environmentObject(breedMessageManager)
     }
 }
 
