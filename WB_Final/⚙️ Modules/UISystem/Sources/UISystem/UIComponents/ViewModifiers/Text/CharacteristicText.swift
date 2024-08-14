@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct CharacteristicText: ViewModifier {
-    var color: Color
+    private var color: Color
     
     public init(color: Color) {
         self.color = color

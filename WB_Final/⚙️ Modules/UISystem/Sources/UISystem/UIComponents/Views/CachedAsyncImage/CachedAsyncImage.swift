@@ -8,9 +8,9 @@
 import SwiftUI
 
 public struct CachedAsyncImage: View {
-    var url: URL
-    var imageSize: (width: CGFloat?, height: CGFloat?)
-    var cornerRadius: CGFloat?
+    private var url: URL
+    private var imageSize: (width: CGFloat?, height: CGFloat?)
+    private var cornerRadius: CGFloat?
 
     @StateObject private var imageLoadStatePublisher = ImageLoadStatePublisher()
     @State private var task: Task<Void, Never>? = nil

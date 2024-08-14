@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    func criteriaToInt() -> Int {
+    var criteriaToInt: Int {
         let regex = try! NSRegularExpression(pattern: "\\d+", options: [])
         let nsString = self as NSString
         let results = regex.matches(in: self, options: [], range: NSRange(location: 0, length: nsString.length))

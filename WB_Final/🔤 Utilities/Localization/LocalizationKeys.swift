@@ -8,8 +8,6 @@
 import SwiftUI
 
 enum LocalizationKeys: String {
-    case send
-    case sending
     case read
     case error
     

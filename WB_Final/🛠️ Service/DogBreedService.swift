@@ -8,7 +8,6 @@
 import Foundation
 import DogsAPI
 import ExyteChat
-import os.log
 
 class DogBreedService: ObservableObject {
     @Published var breeds: [Breed] = [] { didSet { isLoading = false } }
@@ -85,11 +84,11 @@ extension DogBreedService {
     func maximumValue(for characteristic: Characteristics) -> Int {
         switch characteristic {
         case .weight:
-            breeds.compactMap { $0.weight?.metric?.criteriaToInt() }.max() ?? 0
+            breeds.compactMap { $0.weight?.metric?.criteriaToInt }.max() ?? 0
         case .height:
-            breeds.compactMap { $0.height?.metric?.criteriaToInt() }.max() ?? 0
+            breeds.compactMap { $0.height?.metric?.criteriaToInt }.max() ?? 0
         case .lifeSpan:
-            breeds.compactMap { $0.lifeSpan?.criteriaToInt() }.max() ?? 0
+            breeds.compactMap { $0.lifeSpan?.criteriaToInt }.max() ?? 0
         default:
             0
         }

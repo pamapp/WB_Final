@@ -23,6 +23,7 @@ extension BreedDetailView {
         static let barMainPadding: CGFloat = 24
         static let barTopPadding: CGFloat = 16
         
+        static let iconSize: CGFloat = 36
         static let scrollCoordinateSpace = "detailScroll"
     }
 }
@@ -150,7 +151,7 @@ extension BreedDetailView {
     private func characteristicIcon(for emoji: String) -> some View {
         Circle()
             .fill(Color.theme.white)
-            .frame(width: 36, height: 36)
+            .frame(width: Constants.iconSize, height: Constants.iconSize)
             .overlay(
                 Text(emoji)
                     .font(.metadata1())

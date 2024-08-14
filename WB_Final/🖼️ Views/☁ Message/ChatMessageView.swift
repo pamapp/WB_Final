@@ -11,20 +11,13 @@ import UISystem
 
 extension ChatMessageView {
     private enum Constants {
-        static let replyLineLimit: Int = 10
         static let fontSize: CGFloat = 14
         static let imageHeight: CGFloat = 150
         static let imageCornerRadius: CGFloat = 4
-        
+        static let likeSize: CGFloat = 26
         static let spacing: CGFloat = 12
         static let padding: CGFloat = 10
         static let topCornerRadius: CGFloat = 16
-        
-        static let linkStrokeWidth: CGFloat = 1.6
-        static let linkHeight: CGFloat = 20
-        static let linkWidth: CGFloat = 40
-
-        static let linkImageSize: CGFloat = 10
     }
 }
 
@@ -88,22 +81,12 @@ struct ChatMessageView: View {
         isCurrentUser ? Color.white : Color.theme.disabled
     }
     
-    private var replyLineColor: Color {
-        isCurrentUser ? Color.theme.white : Color.theme.defaultColor
-    }
-    
-    private var replyBackgroundColor: Color {
-        isCurrentUser ? Color.theme.darkColor : Color.theme.offWhite
-    }
-    
     private var backgroundColor: Color {
         isCurrentUser ? Color.theme.defaultColor : Color.theme.white
     }
     
     private var messageStatusText: String {
         switch message.status {
-        case .sending: UI.Strings.sending
-        case .sent: UI.Strings.send
         case .read: UI.Strings.read
         default: UI.Strings.error
         }
@@ -182,7 +165,7 @@ extension ChatMessageView {
             if isBreedFavorite {
                 Circle()
                     .fill(Color.theme.offWhite)
-                    .frame(width: 26, height: 26)
+                    .frame(width: Constants.likeSize, height: Constants.likeSize)
                     .overlay(Image(UI.Icons.heart))
             }
         case true:

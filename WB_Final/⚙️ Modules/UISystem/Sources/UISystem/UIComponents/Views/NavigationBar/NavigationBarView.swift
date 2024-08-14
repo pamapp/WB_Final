@@ -5,7 +5,7 @@
 //
 
 import SwiftUI
-
+    
 public struct NavigationBarView: View {
     var title: String?
     var leadingIcon: String?

@@ -15,11 +15,11 @@ extension Breed {
         
         switch characteristic {
         case .weight:
-            currentValue = weight?.metric?.criteriaToInt() ?? 0
+            currentValue = weight?.metric?.criteriaToInt ?? 0
         case .height:
-            currentValue = height?.metric?.criteriaToInt() ?? 0
+            currentValue = height?.metric?.criteriaToInt ?? 0
         case .lifeSpan:
-            currentValue = lifeSpan?.criteriaToInt() ?? 0
+            currentValue = lifeSpan?.criteriaToInt ?? 0
         default:
             currentValue = 0
         }
@@ -29,9 +29,10 @@ extension Breed {
 }
 
 extension Breed {
-    func toMessage() -> Message {
+    var message: Message {
         Message(id: UUID().uuidString,
                 user: User(id: "1", name: "Dogs", avatarURL: nil, isCurrentUser: false),
+                status: .read,
                 createdAt: Date(),
                 text: name,
                 attachments: [

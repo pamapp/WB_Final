@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+public extension ProgressLineView {
+    enum Constants {
+        static var lineOpacity: CGFloat = 0.3
+        static var cornerRadius: CGFloat = 45
+        static var animationDuration: CGFloat = 0.8
+    }
+}
+
 public struct ProgressLineView: View {
     @State private var animatedProgress: CGFloat = 0
 
@@ -23,18 +31,18 @@ public struct ProgressLineView: View {
             ZStack(alignment: .leading) {
                 Rectangle()
                     .frame(width: geometry.size.width, height: geometry.size.height)
-                    .opacity(0.3)
+                    .opacity(Constants.lineOpacity)
                     .foregroundColor(.gray)
                 
                 Rectangle()
                     .frame(width: geometry.size.width * animatedProgress, height: geometry.size.height)
                     .foregroundColor(color)
-                    .cornerRadius(45.0)
+                    .cornerRadius(Constants.cornerRadius)
             }
-            .cornerRadius(45.0)
+            .cornerRadius(Constants.cornerRadius)
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.8)) {
+            withAnimation(.easeInOut(duration: Constants.animationDuration)) {
                 animatedProgress = progress
             }
         }

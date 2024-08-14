@@ -28,9 +28,7 @@ enum UI {
  
         static var addFav: String { localizedString(for: .addFav) }
         static var removeFav: String { localizedString(for: .removeFav) }
-        
-        static var send: String { localizedString(for: .send) }
-        static var sending: String { localizedString(for: .sending) }
+
         static var read: String { localizedString(for: .read) }
         static var error: String { localizedString(for: .error) }
         
@@ -50,16 +48,17 @@ enum UI {
         static let playAudio: String = "playAudio"
         static let heart: String = "heart"
         static let heartFill: String = "heart.fill"
+        static let dog: String = "dog"
     }
 }
-
-enum Logger {
-    static let errorFetchingBreeds: StaticString = "Error fetching breeds: %{public}@"
-    static let successFetchingBreeds: StaticString = "Successfully fetched breeds. Number of breeds: %d"
-    static let emptyResponseFetchingBreeds: StaticString = "Received empty response when fetching breeds."
-    static let errorFetchingFavorites: StaticString = "Error fetching favorites: %{public}@"
-    static let errorAddingFavorite: StaticString = "Error adding favorite: %{public}@"
-    static let errorRemovingFavorite: StaticString = "Error removing favorite: %{public}@"
-    static let errorFetchingData: StaticString = "Error fetching data: %{public}@"
-}
-
+//
+//enum Logger {
+//    static let errorFetchingBreeds: StaticString = "Error fetching breeds: %{public}@"
+//    static let successFetchingBreeds: StaticString = "Successfully fetched breeds. Number of breeds: %d"
+//    static let emptyResponseFetchingBreeds: StaticString = "Received empty response when fetching breeds."
+//    static let errorFetchingFavorites: StaticString = "Error fetching favorites: %{public}@"
+//    static let errorAddingFavorite: StaticString = "Error adding favorite: %{public}@"
+//    static let errorRemovingFavorite: StaticString = "Error removing favorite: %{public}@"
+//    static let errorFetchingData: StaticString = "Error fetching data: %{public}@"
+//}
+//

@@ -12,16 +12,10 @@ import DogsAPI
 struct PersonalChatScreen: View {
     @EnvironmentObject var fetchedBreeds: DogBreedService
     @EnvironmentObject var breedMessageManager: BreedMessageManager
-    
-    @StateObject private var vm: ChatViewModel
     @FocusState private var isInputFocused: Bool
 
     @State private var selectedBreed: Breed? = nil
 
-    init(vm: ChatViewModel = ChatViewModel()) {
-        _vm = StateObject(wrappedValue: vm)
-    }
-    
     var body: some View {
         VStack {
             NavigationBarView(
@@ -33,7 +27,7 @@ struct PersonalChatScreen: View {
             )
             
             ChatView(
-                messages: vm.messages,
+                messages: breedMessageManager.messages,
                 chatType: .conversation,
                 didSendMessage: { _ in },
                 messageBuilder: messageViewBuilder,
@@ -54,11 +48,14 @@ struct PersonalChatScreen: View {
         .fullScreenCover(item: $selectedBreed) { breed in
             BreedDetailView(breed: breed, tapLike: {
                 Task {
-                    await toggleLikeStatus(imageId: breed.referenceImageId ?? "")
+                    await breedMessageManager.toggleLikeStatus(
+                        imageId: breed.referenceImageId ?? "",
+                        fetchedBreeds: fetchedBreeds
+                    )
                 }
             })
         }
-        .onChange(of: vm.command) {
+        .onChange(of: breedMessageManager.command) {
             Task {
                 await updateData()
             }
@@ -67,7 +64,6 @@ struct PersonalChatScreen: View {
 }
 
 extension PersonalChatScreen {
-
     @ViewBuilder
     private func messageViewBuilder(
         message: Message,
@@ -85,7 +81,10 @@ extension PersonalChatScreen {
             positionInUserGroup: positionInGroup, 
             tapLike: {
                 Task {
-                    await toggleLikeStatus(imageId: imageId ?? "")
+                    await breedMessageManager.toggleLikeStatus(
+                        imageId: imageId ?? "",
+                        fetchedBreeds: fetchedBreeds
+                    )
                 }
             }
         )
@@ -132,31 +131,14 @@ extension PersonalChatScreen {
     private func commandsView() -> some View {
         switch isInputFocused {
         case true:
-            HStack(spacing: 16) {
-                Button(action: { vm.command = .all }) {
-                    HStack {
-                        Image(systemName: "dog")
-                        Text("All")
-                    }
+            CommandsView(
+                items: Commands.allCases,
+                iconBuilder: { $0.icon },
+                titleBuilder: { Text($0.name) },
+                action: { command in
+                    breedMessageManager.command = command
                 }
-                .buttonStyle(CommandButtonStyle())
-
-                
-                Button(action: { vm.command = .favorite }) {
-                    HStack {
-                        Image(UI.Icons.heart)
-                        Text("Favorites")
-                    }
-                }
-                .buttonStyle(CommandButtonStyle())
-                
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 30)
-            .padding(.horizontal, 16)
-            .padding(.top, 8)
-            .background(Color.theme.white)
+            )
         case false:
             EmptyView()
         }
@@ -165,85 +147,29 @@ extension PersonalChatScreen {
 
 extension PersonalChatScreen {
     private func sendDraft(draft: String) {
-        vm.command = .search(draft)
+        breedMessageManager.command = .search(draft)
     }
     
     private func loadData() async {
-        fetchedBreeds.loadBreeds { breeds, error in
-            Task {
-                if let breeds = breeds {
-                    breedMessageManager.updateBreedMessages(from: breeds)
-                    await MainActor.run {
-                        vm.messages = breedMessageManager.getMessages()
-                    }
-                }
-            }
-        }
+         fetchedBreeds.loadBreeds { breeds, error in
+             Task {
+                 if let breeds = breeds {
+                     breedMessageManager.updateBreedMessages(from: breeds)
+                     breedMessageManager.updateMessages(fetchedBreeds: fetchedBreeds)
+                 }
+             }
+         }
 
-        fetchedBreeds.loadFavorites { data, error in
-            Task {
-                await MainActor.run {
-                    fetchedBreeds.favoriteBreeds = data ?? []
-                }
-            }
-        }
-    }
+         fetchedBreeds.loadFavorites { data, error in
+             Task {
+                 await MainActor.run {
+                     fetchedBreeds.favoriteBreeds = data ?? []
+                 }
+             }
+         }
+     }
 
     private func updateData() async {
-        switch vm.command {
-        case .favorite:
-            let favoriteBreedMessages = breedMessageManager.getFavoriteBreedMessages(favoriteImageIds: fetchedBreeds.getFavoriteImageIds())
-            let favoriteMessages = favoriteBreedMessages.map { $0.message }
-
-            await MainActor.run {
-                if !favoriteMessages.isEmpty {
-                    vm.messages = favoriteMessages
-                }
-            }
-
-        case .search(let searchString):
-            breedMessageManager.updateBreedMessages(from: fetchedBreeds.breeds)
-            let filteredMessages = breedMessageManager.getMessages().filtered(by: searchString)
-            
-            await MainActor.run {
-                if !filteredMessages.isEmpty {
-                    vm.messages = filteredMessages
-                }
-            }
-
-        default:
-            breedMessageManager.updateBreedMessages(from: fetchedBreeds.breeds)
-            let allMessages = breedMessageManager.getMessages()
-
-            await MainActor.run {
-                if !allMessages.isEmpty {
-                    vm.messages = allMessages
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Actions
-
-extension PersonalChatScreen {
-    private func toggleLikeStatus(imageId: String) async {
-        if fetchedBreeds.isBreedFavorite(imageId) {
-            _ = await removeFavorite(imageId)
-        } else {
-            _ = await addFavorite(imageId)
-        }
-    }
-    
-    private func addFavorite(_ imageId: String) async -> Bool {
-        await fetchedBreeds.addFavorite(imageId: imageId)
-    }
-
-    private func removeFavorite(_ imageId: String) async -> Bool {
-        guard let favorite = fetchedBreeds.favoriteBreeds.first(where: { $0.imageId == imageId }) else {
-            return false
-        }
-        
-        return await fetchedBreeds.removeFavorite(id: favorite.id)
+        breedMessageManager.updateMessages(fetchedBreeds: fetchedBreeds)
     }
 }

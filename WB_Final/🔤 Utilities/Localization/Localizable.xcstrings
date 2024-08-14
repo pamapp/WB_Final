@@ -17,6 +17,18 @@
         }
       }
     },
+    "↗" : {
+
+    },
+    "↘" : {
+
+    },
+    "🎈" : {
+
+    },
+    "🪨" : {
+
+    },
     "addFav" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -50,9 +62,6 @@
           }
         }
       }
-    },
-    "All" : {
-
     },
     "awesome" : {
       "extractionState" : "manual",
@@ -207,9 +216,6 @@
         }
       }
     },
-    "Favorites" : {
-
-    },
     "height" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -291,23 +297,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Убрать из избранного"
-          }
-        }
-      }
-    },
-    "sending" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sending"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Отправка"
           }
         }
       }

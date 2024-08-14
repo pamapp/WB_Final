@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-extension ChipsView {
-    private enum Constants {
-        static let bottomPadding: CGFloat = 8
-        static let trailingPadding: CGFloat = 4
-        static let chipCornerRadius: CGFloat = 16
-        static let chipHeight: CGFloat = 44
-        static let chipPadding: CGFloat = 10
+public extension ChipsView {
+    enum Constants {
+        static var trailingPadding: CGFloat = 8
+        static var bottomPadding: CGFloat = 4
+        static var chipCornerRadius: CGFloat = 16
+        static var chipHeight: CGFloat = 44
+        static var chipPadding: CGFloat = 10
     }
 }
 
@@ -34,8 +34,8 @@ public struct ChipsView: View {
                 ZStack(alignment: .topLeading) {
                     ForEach(Array(values.enumerated()), id: \.element) { index, word in
                         chipItem(value: word)
-                            .padding(.trailing, 8)
-                            .padding(.bottom, 4)
+                            .padding(.trailing, Constants.trailingPadding)
+                            .padding(.bottom, Constants.bottomPadding)
                             .alignmentGuide(.leading, computeValue: { d in
                                 if (abs(width - d.width) > geometry.size.width) {
                                     width = 0
