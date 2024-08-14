@@ -19,6 +19,11 @@ enum LocalizationKeys: String {
     case favorites
     case sortBy
     case command
+    case abc
+    case heaviest
+    case lightest
+    case tallest
+    case smallest
     
     case basicInfo
     case temperament

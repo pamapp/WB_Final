@@ -49,6 +49,10 @@ final class BreedMessageManager: ObservableObject {
             let sortedBreedMessages = breedMessages.sorted(by: .height, ascending: ascending)
             messages = sortedBreedMessages.map { $0.message }
 
+        case .lifeSpan(let ascending):
+            let sortedBreedMessages = breedMessages.sorted(by: .lifeSpan, ascending: ascending)
+            messages = sortedBreedMessages.map { $0.message }
+            
         case .search(let searchString):
             let filteredMessages = getMessages().filtered(by: searchString)
             messages = !filteredMessages.isEmpty ? filteredMessages : [ replyMessage ]

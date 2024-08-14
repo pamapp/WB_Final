@@ -13,6 +13,7 @@ enum Commands: Equatable, Identifiable {
     case all(Bool)
     case heaviest(Bool)
     case tallest(Bool)
+    case lifeSpan(Bool)
     case search(String)
     
     var id: Self { self }
@@ -26,7 +27,9 @@ enum Commands: Equatable, Identifiable {
         case .heaviest(let ascending):
             AnyView(Text(ascending ? "🪨" : "🎈"))
         case .tallest(let ascending):
-            AnyView(Text(ascending ?"↗" : "↘"))
+            AnyView(Text(ascending ? "↗" : "↘"))
+        case .lifeSpan(let ascending):
+            AnyView(Text(ascending ? "↗" : "↘"))
         default:
             AnyView(EmptyView())
         }
@@ -34,10 +37,16 @@ enum Commands: Equatable, Identifiable {
     
     var name: String {
         switch self {
-        case .all(let ascending): ascending ? "ABC": "All"
-        case .favorite: "Favorite"
-        case .heaviest(let ascending): ascending ? "Heaviest" : "Lightest"
-        case .tallest(let ascending): ascending ? "Tallest" : "Smallest"
+        case .all(let ascending): 
+            ascending ? UI.Strings.abc : UI.Strings.all
+        case .favorite:
+            UI.Strings.favorites
+        case .heaviest(let ascending): 
+            ascending ? UI.Strings.heaviest : UI.Strings.lightest
+        case .tallest(let ascending):
+            ascending ? UI.Strings.tallest : UI.Strings.smallest
+        case .lifeSpan(_):
+            UI.Strings.lifeSpan
         default: ""
         }
     }
@@ -45,6 +54,6 @@ enum Commands: Equatable, Identifiable {
 
 extension Commands: CaseIterable, Hashable {
     static var allCases: [Commands] {
-        return [ .all(false), .favorite, .all(true), .heaviest(true), .heaviest(false), .tallest(true), .tallest(false)]
+        return [ .all(false), .favorite, .all(true), .heaviest(true), .heaviest(false), .tallest(true), .tallest(false), .lifeSpan(true), .lifeSpan(false)]
     }
 }

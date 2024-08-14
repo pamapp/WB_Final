@@ -14,6 +14,11 @@ enum UI {
         static var favorites: String { localizedString(for: .favorites) }
         static var sortBy: String { localizedString(for: .sortBy) }
         static var command: String { localizedString(for: .command) }
+        static var abc: String { localizedString(for: .abc) }
+        static var heaviest: String { localizedString(for: .heaviest) }
+        static var lightest: String { localizedString(for: .lightest) }
+        static var tallest: String { localizedString(for: .tallest) }
+        static var smallest: String { localizedString(for: .smallest) }
 
         static var basicInfo: String { localizedString(for: .basicInfo) }
         static var temperament: String { localizedString(for: .temperament) }

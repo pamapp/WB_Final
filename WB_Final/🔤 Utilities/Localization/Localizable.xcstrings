@@ -35,6 +35,23 @@
     "🪨" : {
 
     },
+    "abc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ABC"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "АБВ"
+          }
+        }
+      }
+    },
     "addFav" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -222,6 +239,23 @@
         }
       }
     },
+    "heaviest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heaviest"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тяжелые"
+          }
+        }
+      }
+    },
     "height" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -273,6 +307,23 @@
         }
       }
     },
+    "lightest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lightest"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Легкие"
+          }
+        }
+      }
+    },
     "read" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -307,6 +358,23 @@
         }
       }
     },
+    "smallest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smallest"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Маленькие"
+          }
+        }
+      }
+    },
     "sortBy" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -320,6 +388,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сортировка по"
+          }
+        }
+      }
+    },
+    "tallest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tallest"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Высокие"
           }
         }
       }
