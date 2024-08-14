@@ -21,9 +21,7 @@ struct PersonalChatScreen: View {
             NavigationBarView(
                 title: UI.Strings.dogBreeds,
                 leadingIcon: UI.Icons.back,
-                additionalTrailingIcon: UI.Icons.lines,
-                leadingAction: { isInputFocused = false },
-                additionalTrailingAction: {}
+                leadingAction: { isInputFocused = false }
             )
             
             ChatView(
