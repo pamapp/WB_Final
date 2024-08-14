@@ -12,7 +12,7 @@ import ExyteChat
 final class BreedMessageManager: ObservableObject {
     @Published var breedMessages: [BreedMessage] = []
     @Published var messages: [Message] = []
-    @Published var command: Commands = .all(true)
+    @Published var command: Commands = .all(false)
     
     private let replyMessage = Message(id: UUID().uuidString, user: User(id: "2", name: "Ответчик", avatarURL: nil, isCurrentUser: false), status: .none, text: "😢 Пусто")
     
